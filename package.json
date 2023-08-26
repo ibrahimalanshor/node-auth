@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint --fix",
+    "pretty": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -23,7 +25,7 @@
     "ts-node": "^10.9.1"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{ts,js}": "eslint --cache --fix",
+    "*.{ts,js,css,md}": "prettier --write"
   }
 }
