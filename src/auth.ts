@@ -1,16 +1,13 @@
 import { AuthError } from './errors/auth.error';
 
-export interface RegisterCredential {
-  email: string;
-  password: string;
-}
+export type RegisterCredential<T> = Partial<T>;
 
-export abstract class Auth {
-  protected abstract createUser(credential: RegisterCredential): Promise<any>;
+export abstract class Auth<T> {
+  protected abstract createUser(credential: RegisterCredential<T>): Promise<T>;
 
-  async register(credential: RegisterCredential) {
+  async register(credential: RegisterCredential<T>) {
     try {
-      await this.createUser(credential);
+      const user: T = await this.createUser(credential);
 
       return new AuthResult();
     } catch (err) {

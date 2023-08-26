@@ -1,6 +1,12 @@
 import { describe, test, expect } from '@jest/globals';
-import { Auth, RegisterCredential } from '../src/auth';
+import { Auth, AuthResult, RegisterCredential } from '../src/auth';
 import { AuthError } from '../src/errors/auth.error';
+
+interface User {
+  email: string;
+  name: string;
+  password: string;
+}
 
 describe('auth test', () => {
   test('auth class must have register method', () => {
@@ -8,21 +14,42 @@ describe('auth test', () => {
   });
 
   test('register method must return register error when crete user error', async () => {
-    class TestAuth extends Auth {
-      protected async createUser(credential: RegisterCredential): Promise<any> {
+    class TestAuth extends Auth<User> {
+      protected async createUser(
+        credential: RegisterCredential<User>,
+      ): Promise<User> {
         throw new Error('user is already registered');
       }
     }
-    const testAuth = new TestAuth();
+    const auth = new TestAuth();
 
     try {
-      await testAuth.register({
-        email: 'test@gmail.com',
+      await auth.register({
+        email: 'test@email.com',
         password: 'password',
       });
     } catch (err) {
       expect(err).toBeInstanceOf(AuthError);
       expect((err as AuthError).message).toMatch('user is already registered');
     }
+  });
+
+  test('register method must return jwt auth result', async () => {
+    class TestAuth extends Auth<User> {
+      protected async createUser(
+        credential: RegisterCredential<User>,
+      ): Promise<User> {
+        return credential as User;
+      }
+    }
+    const auth = new TestAuth();
+
+    const res = await auth.register({
+      email: 'test@email.com',
+      password: 'password',
+    });
+
+    expect(typeof res).toEqual('object');
+    expect(res).toBeInstanceOf(AuthResult);
   });
 });
