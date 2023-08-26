@@ -8,9 +8,10 @@ interface User {
   password: string;
 }
 
-describe('auth test', () => {
+describe('register test', () => {
   test('auth class must have register method', () => {
     expect(Auth.prototype).toHaveProperty('register');
+    expect(typeof Auth.prototype.register).toEqual('function');
   });
 
   test('register method must return register error when crete user error', async () => {
