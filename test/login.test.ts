@@ -8,6 +8,12 @@ interface User {
   email: string;
   password: string;
 }
+const user: User = {
+  id: 1,
+  email: 'test@email.com',
+  name: 'Test',
+  password: 'password',
+};
 
 describe.only('login test', () => {
   test('auth class must have login test', () => {
@@ -20,15 +26,18 @@ describe.only('login test', () => {
       protected async createUser(credential: Partial<User>): Promise<User> {
         return credential as User;
       }
+      protected async findUserByEmail(email: string): Promise<User> {
+        throw new Error('Not Found');
+      }
     }
 
     const auth = new TestAuth();
 
     await expect(
-      auth.login({ email: 'test@email.com', password: 'password' }),
+      auth.login({ email: user.email, password: user.password }),
     ).rejects.toThrow(AuthError);
     await expect(
-      auth.login({ email: 'test@email.com', password: 'password' }),
+      auth.login({ email: user.email, password: user.password }),
     ).rejects.toThrow('Email is not found');
   });
 });

@@ -15,6 +15,7 @@ export interface LoginCredential {
 
 export abstract class Auth<T extends User> {
   protected abstract createUser(credential: RegisterCredential<T>): Promise<T>;
+  protected abstract findUserByEmail(email: string): Promise<T>;
 
   async register(credential: RegisterCredential<T>): Promise<AuthResult<T>> {
     try {
@@ -36,9 +37,14 @@ export abstract class Auth<T extends User> {
   }
 
   async login(credential: LoginCredential) {
-    throw new AuthError({
-      name: 'LOGIN_ERROR',
-      message: 'Email is not found',
-    });
+    try {
+      const user = await this.findUserByEmail(credential.email);
+    } catch (err) {
+      throw new AuthError({
+        name: 'LOGIN_ERROR',
+        message: 'Email is not found',
+        cause: err,
+      });
+    }
   }
 }

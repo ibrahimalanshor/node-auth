@@ -9,6 +9,12 @@ interface User {
   name: string;
   password: string;
 }
+const user: User = {
+  id: 1,
+  email: 'test@email.com',
+  name: 'Test',
+  password: 'password',
+};
 
 describe('register test', () => {
   test('auth class must have register method', () => {
@@ -23,14 +29,17 @@ describe('register test', () => {
       ): Promise<User> {
         throw new Error('User is already registered');
       }
+      protected async findUserByEmail(email: string): Promise<User> {
+        return user;
+      }
     }
     const auth = new TestAuth();
 
     await expect(
-      auth.register({ email: 'test@email.com', password: 'password' }),
+      auth.register({ email: user.email, password: user.password }),
     ).rejects.toThrow(AuthError);
     await expect(
-      auth.register({ email: 'test@email.com', password: 'password' }),
+      auth.register({ email: user.email, password: user.password }),
     ).rejects.toThrow('User is already registered');
   });
 
@@ -39,14 +48,17 @@ describe('register test', () => {
       protected async createUser(
         credential: RegisterCredential<User>,
       ): Promise<User> {
-        return credential as User;
+        return user;
+      }
+      protected async findUserByEmail(email: string): Promise<User> {
+        return user;
       }
     }
     const auth = new TestAuth();
 
     const res = await auth.register({
-      email: 'test@email.com',
-      password: 'password',
+      email: user.email,
+      password: user.password,
     });
 
     expect(typeof res).toEqual('object');
