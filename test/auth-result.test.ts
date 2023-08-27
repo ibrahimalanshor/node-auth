@@ -38,7 +38,7 @@ describe('auth result test', () => {
   test('auth result getToken method must returns jwt token', async () => {
     const authResult = new AuthResult<User>(user);
 
-    const token = await authResult.getToken('test');
+    const token = await authResult.getToken({ secret: 'test' });
     const payload = (await jwt.verify(token, 'test')) as AccessTokenPayload;
 
     expect(token).toBeTruthy();
