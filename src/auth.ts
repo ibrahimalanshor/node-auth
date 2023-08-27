@@ -36,7 +36,7 @@ export abstract class Auth<T extends User> {
     }
   }
 
-  async login(credential: LoginCredential) {
+  async login(credential: LoginCredential): Promise<AuthResult<T>> {
     try {
       const user = await this.findUserByEmail(credential.email);
 
@@ -46,6 +46,8 @@ export abstract class Auth<T extends User> {
           message: 'Password is incorrect',
         });
       }
+
+      return new AuthResult(user);
     } catch (err) {
       if (err instanceof AuthError) {
         throw err;
