@@ -39,7 +39,18 @@ export abstract class Auth<T extends User> {
   async login(credential: LoginCredential) {
     try {
       const user = await this.findUserByEmail(credential.email);
+
+      if (!(await bcrypt.compare(credential.password, user.password))) {
+        throw new AuthError({
+          name: 'LOGIN_ERROR',
+          message: 'Password is incorrect',
+        });
+      }
     } catch (err) {
+      if (err instanceof AuthError) {
+        throw err;
+      }
+
       throw new AuthError({
         name: 'LOGIN_ERROR',
         message: 'Email is not found',
