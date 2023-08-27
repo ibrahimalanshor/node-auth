@@ -21,20 +21,17 @@ describe('register test', () => {
       protected async createUser(
         credential: RegisterCredential<User>,
       ): Promise<User> {
-        throw new Error('user is already registered');
+        throw new Error('User is already registered');
       }
     }
     const auth = new TestAuth();
 
-    try {
-      await auth.register({
-        email: 'test@email.com',
-        password: 'password',
-      });
-    } catch (err) {
-      expect(err).toBeInstanceOf(AuthError);
-      expect((err as AuthError).message).toMatch('user is already registered');
-    }
+    await expect(
+      auth.register({ email: 'test@email.com', password: 'password' }),
+    ).rejects.toThrow(AuthError);
+    await expect(
+      auth.register({ email: 'test@email.com', password: 'password' }),
+    ).rejects.toThrow('User is already registered');
   });
 
   test('register method must return jwt auth result', async () => {

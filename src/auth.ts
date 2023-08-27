@@ -8,11 +8,15 @@ export interface AccessTokenPayload {
   email: string;
 }
 export type RegisterCredential<T> = Partial<T>;
+export interface LoginCredential {
+  email: string;
+  password: string;
+}
 
 export abstract class Auth<T extends User> {
   protected abstract createUser(credential: RegisterCredential<T>): Promise<T>;
 
-  async register(credential: RegisterCredential<T>) {
+  async register(credential: RegisterCredential<T>): Promise<AuthResult<T>> {
     try {
       const user: T = await this.createUser({
         ...credential,
@@ -29,5 +33,12 @@ export abstract class Auth<T extends User> {
         cause: err,
       });
     }
+  }
+
+  async login(credential: LoginCredential) {
+    throw new AuthError({
+      name: 'LOGIN_ERROR',
+      message: 'Email is not found',
+    });
   }
 }
