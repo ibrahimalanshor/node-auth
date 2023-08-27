@@ -1,11 +1,13 @@
 import bcrypt from 'bcrypt';
 import { AuthError } from './errors/auth.error';
+import { User } from './user';
+import { AuthResult } from './auth-result';
 
-export interface User {
+export interface AccessTokenPayload {
+  id: number;
   email: string;
-  password: string;
 }
-export type RegisterCredential<T> = User & Partial<T>;
+export type RegisterCredential<T> = Partial<T>;
 
 export abstract class Auth<T extends User> {
   protected abstract createUser(credential: RegisterCredential<T>): Promise<T>;
@@ -14,10 +16,12 @@ export abstract class Auth<T extends User> {
     try {
       const user: T = await this.createUser({
         ...credential,
-        password: await bcrypt.hash(credential.password, 10),
+        ...(credential.password
+          ? { password: await bcrypt.hash(credential.password, 10) }
+          : {}),
       });
 
-      return new AuthResult();
+      return new AuthResult(user);
     } catch (err) {
       throw new AuthError({
         name: 'REGISTER_ERROR',
@@ -27,5 +31,3 @@ export abstract class Auth<T extends User> {
     }
   }
 }
-
-export class AuthResult {}

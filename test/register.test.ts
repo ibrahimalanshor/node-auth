@@ -1,8 +1,10 @@
 import { describe, test, expect } from '@jest/globals';
-import { Auth, AuthResult, RegisterCredential } from '../src/auth';
+import { Auth, RegisterCredential } from '../src/auth';
+import { AuthResult } from '../src/auth-result';
 import { AuthError } from '../src/errors/auth.error';
 
 interface User {
+  id: number;
   email: string;
   name: string;
   password: string;
