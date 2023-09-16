@@ -37,24 +37,20 @@ describe('auth result test', () => {
   });
 
   test('auth result getToken method must returns jwt token', async () => {
+    AuthConfig.setSecret('something-secret');
+
     const authResult = new AuthResult<User>(user);
 
-    const token = await authResult.getToken({ secret: 'test' });
-    const payload = (await jwt.verify(token, 'test')) as AccessTokenPayload;
+    const token = await authResult.getToken();
+    const payload = (await jwt.verify(
+      token,
+      AuthConfig.getSecret(),
+    )) as AccessTokenPayload;
 
     expect(token).toBeTruthy();
     expect(payload).toHaveProperty('id');
     expect(payload).toHaveProperty('email');
     expect(payload.id).toEqual(user.id);
     expect(payload.email).toEqual(user.email);
-  });
-
-  test('auth result should be from auth config if present', async () => {
-    AuthConfig.setSecret('something-secret');
-
-    const authResult = new AuthResult<User>(user);
-
-    const token = await authResult.getToken();
-    expect(jwt.verify(token, AuthConfig.getSecret())).resolves;
   });
 });
