@@ -1,5 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { User } from './user';
+import AuthConfig from './auth-config';
 
 export interface AccessTokenPayload {
   id: number;
@@ -26,8 +27,8 @@ export class AuthResult<T extends User> {
 
     return await jwt.sign(
       payload,
-      options?.secret ?? 'secret',
-      options?.signOptions,
+      options?.secret ? options.secret : AuthConfig.getSecret(),
+      options?.signOptions ? options.signOptions : AuthConfig.getOptions(),
     );
   }
 }
