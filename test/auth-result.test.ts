@@ -2,6 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import jwt from 'jsonwebtoken';
 import { AccessTokenPayload } from '../src/auth';
 import { AuthResult } from '../src/auth-result';
+import AuthConfig from '../src/auth-config';
 
 interface User {
   id: number;
@@ -46,5 +47,14 @@ describe('auth result test', () => {
     expect(payload).toHaveProperty('email');
     expect(payload.id).toEqual(user.id);
     expect(payload.email).toEqual(user.email);
+  });
+
+  test('auth result should be from auth config if present', async () => {
+    AuthConfig.setSecret('something-secret');
+
+    const authResult = new AuthResult<User>(user);
+
+    const token = await authResult.getToken();
+    expect(jwt.verify(token, AuthConfig.getSecret())).resolves;
   });
 });
