@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { AuthError } from './errors/auth.error';
 import { User } from './user';
-import { AuthResult } from './auth-result';
+import { AccessToken, AuthResult } from './auth-result';
+import AuthConfig from './auth-config';
 
 export interface AccessTokenPayload {
   id: number;
@@ -16,6 +18,7 @@ export interface LoginCredential {
 export abstract class Auth<T extends User> {
   protected abstract createUser(credential: RegisterCredential<T>): Promise<T>;
   protected abstract findUserByEmail(email: string): Promise<T>;
+  protected abstract findUserById(id: number): Promise<T | null>;
 
   async register(credential: RegisterCredential<T>): Promise<AuthResult<T>> {
     try {
@@ -57,6 +60,48 @@ export abstract class Auth<T extends User> {
         name: 'LOGIN_ERROR',
         message: 'Email is not found',
         cause: err,
+      });
+    }
+  }
+
+  async authenticate(accessToken: AccessToken) {
+    try {
+      if (!accessToken) {
+        throw new AuthError({
+          name: 'AUTHENTICATE_ERROR',
+          message: 'Access token is invalid',
+        });
+      }
+
+      const payload = (await jwt.verify(
+        accessToken,
+        AuthConfig.getSecret(),
+      )) as AccessTokenPayload;
+      const user = await this.findUserById(payload.id);
+
+      if (!user) {
+        throw new AuthError({
+          name: 'AUTHENTICATE_ERROR',
+          message: 'User is not found',
+        });
+      }
+
+      return user;
+    } catch (err) {
+      if (err instanceof AuthError) {
+        throw err;
+      }
+
+      if (err instanceof JsonWebTokenError) {
+        throw new AuthError({
+          name: 'AUTHENTICATE_ERROR',
+          message: 'Access token is invalid',
+        });
+      }
+
+      throw new AuthError({
+        name: 'AUTHENTICATE_ERROR',
+        message: 'Authentication Failed',
       });
     }
   }

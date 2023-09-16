@@ -2,6 +2,7 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import { User } from './user';
 import AuthConfig from './auth-config';
 
+export type AccessToken = string;
 export interface AccessTokenPayload {
   id: number;
   email: string;
@@ -18,7 +19,7 @@ export class AuthResult<T extends User> {
     return this.user;
   }
 
-  public async getToken(options?: GetTokenOptions): Promise<string> {
+  public async getToken(options?: GetTokenOptions): Promise<AccessToken> {
     const user = this.getUser();
     const payload: AccessTokenPayload = {
       id: user.id,
