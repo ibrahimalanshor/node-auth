@@ -88,3 +88,21 @@ const user = await myAuth.authenticate('ed****');
 // return jwt
 await newUser.getToken();
 ```
+
+## Errors
+
+Throws `AuthError` object.
+
+```js
+import { AuthError } from 'otentikasi';
+
+try {
+  // login, register, authenticate
+} catch (err) {
+  if (err instanceof AuthError) {
+    err.name; // REGISTER_ERROR' | 'LOGIN_ERROR' | 'AUTHENTICATE_ERROR
+    err.message; // string
+    err.cause; // any
+  }
+}
+```
