@@ -20,7 +20,9 @@ export abstract class Auth<T extends User> {
   protected abstract findUserByEmail(email: string): Promise<T>;
   protected abstract findUserById(id: number): Promise<T | null>;
 
-  async register(credential: RegisterCredential<T>): Promise<AuthResult<T>> {
+  public async register(
+    credential: RegisterCredential<T>,
+  ): Promise<AuthResult<T>> {
     try {
       const user: T = await this.createUser({
         ...credential,
@@ -39,7 +41,7 @@ export abstract class Auth<T extends User> {
     }
   }
 
-  async login(credential: LoginCredential): Promise<AuthResult<T>> {
+  public async login(credential: LoginCredential): Promise<AuthResult<T>> {
     try {
       const user = await this.findUserByEmail(credential.email);
 
@@ -64,7 +66,7 @@ export abstract class Auth<T extends User> {
     }
   }
 
-  async authenticate(accessToken: AccessToken) {
+  public async authenticate(accessToken: AccessToken): Promise<T> {
     try {
       if (!accessToken) {
         throw new AuthError({

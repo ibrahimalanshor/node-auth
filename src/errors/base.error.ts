@@ -1,5 +1,5 @@
 export abstract class BaseError<ErrorName extends string> extends Error {
-  publicname: ErrorName;
+  name: ErrorName;
   message: string;
   cause: any;
 
