@@ -32,6 +32,9 @@ describe('register test', () => {
       protected async findUserByEmail(email: string): Promise<User> {
         return user;
       }
+      protected async findUserById(id: number): Promise<User | null> {
+        return null;
+      }
     }
     const auth = new TestAuth();
 
@@ -52,6 +55,9 @@ describe('register test', () => {
       }
       protected async findUserByEmail(email: string): Promise<User> {
         return user;
+      }
+      protected async findUserById(id: number): Promise<User | null> {
+        return null;
       }
     }
     const auth = new TestAuth();
