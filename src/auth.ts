@@ -30,7 +30,7 @@ export abstract class Auth<T extends User> {
     } catch (err) {
       throw new AuthError({
         name: 'REGISTER_ERROR',
-        message: err instanceof Error ? err.message : 'Craete User Error',
+        message: 'User is already registered',
         cause: err,
       });
     }

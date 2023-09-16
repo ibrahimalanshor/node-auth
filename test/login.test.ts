@@ -17,7 +17,7 @@ const user: User = {
   password: 'password',
 };
 
-describe.only('login test', () => {
+describe('login test', () => {
   beforeAll(async () => {
     user.password = await bcrypt.hash(user.password, 10);
   });
@@ -33,7 +33,7 @@ describe.only('login test', () => {
         return user;
       }
       protected async findUserByEmail(email: string): Promise<User> {
-        throw new Error('Not Found');
+        throw new Error();
       }
     }
 
@@ -67,7 +67,7 @@ describe.only('login test', () => {
     ).rejects.toThrow('Password is incorrect');
   });
 
-  test('login method must throw login error if password is incorrect', async () => {
+  test('login method must return jwt auth result', async () => {
     class TestAuth extends Auth<User> {
       protected async createUser(credential: Partial<User>): Promise<User> {
         return user;

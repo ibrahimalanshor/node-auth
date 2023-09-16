@@ -27,7 +27,7 @@ describe('register test', () => {
       protected async createUser(
         credential: RegisterCredential<User>,
       ): Promise<User> {
-        throw new Error('User is already registered');
+        throw new Error();
       }
       protected async findUserByEmail(email: string): Promise<User> {
         return user;
