@@ -5,7 +5,7 @@
   "homepage": "https://github.com/ibrahimalanshor/otentikasi#README.md",
   "main": "index.js",
   "files": ["build"],
-  "types": "./types/index.d.ts",
+  "types": "./build/index.d.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",

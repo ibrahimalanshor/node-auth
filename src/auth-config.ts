@@ -1,8 +1,8 @@
 import { SignOptions, Secret } from 'jsonwebtoken';
 
 export default new (class AuthConfig {
-  private secret: Secret;
-  private options: SignOptions;
+  public secret: Secret;
+  public options: SignOptions;
 
   public setSecret(secret: Secret): this {
     this.secret = secret;
