@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "galat": "^1.0.1",
     "jsonwebtoken": "^9.0.1"
   }
 }
