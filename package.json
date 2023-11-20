@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "Otentikasi",
   "homepage": "https://github.com/ibrahimalanshor/otentikasi#README.md",
-  "main": "index.js",
+  "main": "./build/index.js",
   "files": [
     "build"
   ],
