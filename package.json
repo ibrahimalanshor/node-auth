@@ -1,10 +1,13 @@
 {
   "name": "otentikasi",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Otentikasi",
   "homepage": "https://github.com/ibrahimalanshor/otentikasi#README.md",
-  "main": "index.js",
-  "files": ["build"],
+  "main": "./build/index.js",
+  "files": [
+    "build"
+  ],
+  "types": "./build/index.d.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
@@ -37,6 +40,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "galat": "^1.0.1",
     "jsonwebtoken": "^9.0.1"
   }
 }
